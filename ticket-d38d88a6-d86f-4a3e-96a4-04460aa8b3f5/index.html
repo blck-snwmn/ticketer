@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライブチケット生成</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #downloadBtn {
+            display: none;
+            margin-top: 10px;
+            background-color: #2196F3;
+        }
+
+        #downloadBtn:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>ライブチケット生成</h1>
+        <canvas id="ticketCanvas" width="600" height="250"></canvas>
+        <div class="input-container">
+            <input type="text" id="nameInput" placeholder="名前を入力してください">
+            <button id="generateBtn">チケット生成</button>
+        </div>
+        <button id="downloadBtn">チケットをダウンロード</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('ticketCanvas');
+        const ctx = canvas.getContext('2d');
+        const nameInput = document.getElementById('nameInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function drawTicket(name = '') {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ticket background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ticket border
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+            // Draw vertical decorative line (ticket stub separation)
+            ctx.beginPath();
+            ctx.setLineDash([10, 5]);
+            ctx.moveTo(canvas.width - 150, 10);
+            ctx.lineTo(canvas.width - 150, canvas.height - 10);
+            ctx.stroke();
+
+            // Reset line dash
+            ctx.setLineDash([]);
+
+            // Draw main title
+            ctx.font = 'bold 28px Arial';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'left';
+            ctx.fillText('VIRTUAL LIVE 2024', 30, 50);
+
+            // Draw event details
+            ctx.font = '16px Arial';
+            const eventDetails = [
+                '日時: 2024年5月1日(水) 開場17:30 開演18:30',
+                '会場: バーチャルホール',
+                '座席: S席 1階 A列',
+                '料金: ¥7,800 (税込)',
+                'チケット番号: VL24-0501-1234'
+            ];
+
+            eventDetails.forEach((detail, index) => {
+                ctx.fillText(detail, 30, 90 + (index * 25));
+            });
+
+            // Draw name section
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('来場者名', 30, 220);
+
+            // Draw name box (smaller size)
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1;
+            const nameBoxX = 110;
+            const nameBoxY = 205;
+            const nameBoxWidth = 150;
+            const nameBoxHeight = 25;
+            ctx.strokeRect(nameBoxX, nameBoxY, nameBoxWidth, nameBoxHeight);
+
+            // Draw name if provided
+            if (name) {
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillText(name, nameBoxX + 5, nameBoxY + 18);
+            }
+
+            // Draw stub section
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('TICKET STUB', canvas.width - 75, 40);
+            ctx.font = '14px Arial';
+            ctx.fillText('2024.5.1', canvas.width - 75, 70);
+            ctx.fillText('18:30 START', canvas.width - 75, 90);
+
+            // Draw name in stub only if provided
+            if (name) {
+                ctx.font = '12px Arial';
+                ctx.fillText(name, canvas.width - 75, 120);
+            }
+        }
+
+        // Initial draw
+        drawTicket();
+
+        // Generate ticket when button is clicked
+        generateBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert('名前を入力してください');
+                return;
+            }
+            drawTicket(name);
+            downloadBtn.style.display = 'inline-block';
+        });
+
+        // Download ticket
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'virtual-live-ticket.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+
+</html>
