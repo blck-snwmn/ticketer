@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Name Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #ticketCanvas {
+            max-width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #downloadBtn {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Ticket Name Generator</h1>
+        <canvas id="ticketCanvas"></canvas>
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="Enter your name">
+            <button onclick="generateTicket()">Generate</button>
+        </div>
+        <button id="downloadBtn" onclick="downloadImage()">Download Ticket</button>
+    </div>
+
+    <script>
+        let canvas = document.getElementById('ticketCanvas');
+        let ctx = canvas.getContext('2d');
+        let templateImage = new Image();
+
+        // Load template image
+        templateImage.onload = function () {
+            canvas.width = templateImage.width;
+            canvas.height = templateImage.height;
+            ctx.drawImage(templateImage, 0, 0);
+        };
+        templateImage.src = 'assets/ticket.jpg';
+
+        function generateTicket() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('Please enter a name');
+                return;
+            }
+
+            // Redraw template
+            ctx.drawImage(templateImage, 0, 0);
+
+            // Add name text
+            ctx.font = 'bold 24px Arial';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'center';
+            ctx.fillText(name, canvas.width * 0.62, canvas.height * 0.7);
+
+            // Show download button
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'ticket.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+
+</html>
