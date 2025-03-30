@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ライブチケット生成</title>
+    <title>Ticket Generator</title>
     <style>
         body {
             display: flex;
@@ -68,13 +68,13 @@
 
 <body>
     <div class="container">
-        <h1>ライブチケット生成</h1>
+        <h1>Ticket Generator</h1>
         <canvas id="ticketCanvas" width="600" height="250"></canvas>
         <div class="input-container">
-            <input type="text" id="nameInput" placeholder="名前を入力してください">
-            <button id="generateBtn">チケット生成</button>
+            <input type="text" id="nameInput" placeholder="Enter your name">
+            <button id="generateBtn">Generate Ticket</button>
         </div>
-        <button id="downloadBtn">チケットをダウンロード</button>
+        <button id="downloadBtn">Download Ticket</button>
     </div>
 
     <script>
@@ -116,11 +116,11 @@
             // Draw event details
             ctx.font = '16px Arial';
             const eventDetails = [
-                '日時: 2024年5月1日(水) 開場17:30 開演18:30',
-                '会場: バーチャルホール',
-                '座席: S席 1階 A列',
-                '料金: ¥7,800 (税込)',
-                'チケット番号: VL24-0501-1234'
+                'Date: May 1, 2024 (Wed) Doors: 17:30 Start: 18:30',
+                'Venue: Virtual Hall',
+                'Seat: S Row A',
+                'Price: $10.00 (tax included)',
+                'Ticket Number: VL24-0501-1234'
             ];
 
             eventDetails.forEach((detail, index) => {
@@ -129,7 +129,7 @@
 
             // Draw name section
             ctx.font = 'bold 14px Arial';
-            ctx.fillText('来場者名', 30, 220);
+            ctx.fillText('Attendee Name', 30, 220);
 
             // Draw name box (smaller size)
             ctx.strokeStyle = '#000000';
@@ -169,7 +169,7 @@
         generateBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
             if (!name) {
-                alert('名前を入力してください');
+                alert('Please enter a name');
                 return;
             }
             drawTicket(name);
